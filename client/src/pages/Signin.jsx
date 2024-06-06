@@ -1,11 +1,14 @@
 import React,{useState} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
+import { signInStart,signInSuccess,signInFailure } from '../app/user/userSlice'
+import OAuth from '../components/OAuth'
 
 const Signin = () => {
   const navigate=useNavigate();
   const [formData,setFormData]=useState([]);
-  const [error,setError]=useState(null);
-  const [loading,setLoading]=useState(false);
+  const {loading,error}=useSelector((state)=>state.user);//to change user state as we can have multiple states
+  const dispatch=useDispatch();
   const handleChange=(e)=>{
     setFormData({
       ...formData,
@@ -13,9 +16,9 @@ const Signin = () => {
     });
   };
   const handleSubmit=async (e)=>{
+    e.preventDefault(); 
     try {
-      e.preventDefault(); 
-   setLoading(true);
+      dispatch(signInStart());
    const res=await fetch('/api/auth/signin',{
     method:'POST',
     headers:{
@@ -25,16 +28,13 @@ const Signin = () => {
    });
    const data=await res.json();
    if(data.success===false){
-    setError(data.message);
-    setLoading(false);
+    dispatch(signInFailure(data.message));
     return;
    }
-   setLoading(false);
-   setError(null);
+   dispatch(signInSuccess(data));
    navigate('/');
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
   return (
@@ -44,6 +44,7 @@ const Signin = () => {
         <input type="text" placeholder='email' className='border p-3 rounded-lg focus:outline-none' id='email' onChange={handleChange}/>
         <input type="text" placeholder='passsword' className='border p-3 rounded-lg focus:outline-none' id='password' onChange={handleChange}/>
         <button disabled={loading} onClick={handleSubmit}className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 diabled:opacity-80'>{loading?"loading...":"SIGN IN"}</button>
+        <OAuth />
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Do not an account?</p>

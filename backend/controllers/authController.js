@@ -44,7 +44,7 @@ export const google=async(req,res,next)=>{
             const generatePassword=Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8);
             const hashPass=bcryptjs.hashSync(generatePassword,10);
             const newUser=new User({
-                username:req.body.name.split(" ").join("").toLowerCase()+Math.random().toString(36).slice(-4),
+                username:req.body.name.split(" ").join("").toLowerCase()+Math.random().toString(36).slice(-4),//to make unique name
                 email:req.body.email,
                 password:hashPass,
                 avatar:req.body.avatar

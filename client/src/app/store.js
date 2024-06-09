@@ -7,7 +7,7 @@ const rootReducer=combineReducers({user:userReducer})
 const persistConfig={
   key:'root',
   storage,
-  versions:1
+  versions:1  
 }
 const persistedReducer=persistReducer(persistConfig,rootReducer);
 export const store = configureStore({

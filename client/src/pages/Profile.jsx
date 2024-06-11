@@ -34,7 +34,6 @@ const Profile = () => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setFilePerc(Math.round(progress));
-        console.log(progress);
       },
       (error) => {
         setFileUploadError(true);
@@ -60,11 +59,12 @@ const Profile = () => {
         <img
           onClick={() => fileRef.current.click()}
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
-          src={currentUser.avatar}
+          src={formData.avatar||currentUser.avatar}
           alt="profile"
         />
+        <p className="text-center">
         {fileUploadError ? (
-          <span className="text-red-700">Error Image Upload</span>
+          <span className="text-red-700">Error Image Upload (Image must be less than 2MB)</span>
         ) : filePerc > 0 && filePerc < 100 ? (
           <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
         ) : filePerc === 100 ? (
@@ -72,6 +72,7 @@ const Profile = () => {
         ) : (
           ""
         )}
+        </p>
         <input
           type="text"
           id="username"

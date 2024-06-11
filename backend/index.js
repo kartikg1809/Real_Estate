@@ -2,11 +2,15 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRouter from './routes/authRoutes.js';
+import userRouter from './routes/userRoute.js';
+import cookieParser from 'cookie-parser';
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());    //to allow json to the server
+
+app.use(cookieParser());
 
 app.listen(3000,()=>{
     console.log("Listening on port 3000");
@@ -18,6 +22,8 @@ app.listen(3000,()=>{
 })
 
 app.use('/api/auth',authRouter);
+app.use('/api/user',userRouter);
+
 
 app.use((err,req,res,next)=>{
     const statuscode=err.statusCode||500;

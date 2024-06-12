@@ -8,6 +8,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import {Link} from 'react-router-dom'
 import {
   updateUserFailure,
   updateUserSuccess,
@@ -166,10 +167,13 @@ const Profile = () => {
         />
         <button
           disabled={loading}
-          className="bg-slate-700 p-2 text-white rounded-lg uppercase hover:placeholder-opacity-95 disabled:opacity-80"
+          className="bg-slate-700 p-2 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
         >
           {loading ? "Loading..." : "UPDATE"}
         </button>
+        <Link className="bg-green-700 p-2 text-center text-white rounded-lg uppercase hover:opacity-95" to={"/create-listing"}>
+        CREATE LISTING
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span onClick={handleDelete} className="text-red-600 cursor-pointer font-semibold">

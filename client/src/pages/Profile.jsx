@@ -8,14 +8,19 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
+import { MdDeleteOutline } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
 import {
   updateUserFailure,
   updateUserSuccess,
   updateUserStart,
   deleteUserFailure,
   deleteUserSuccess,
-  deleteUserStart,signOutStart,signOutFailure,signOutSuccess
+  deleteUserStart,
+  signOutStart,
+  signOutFailure,
+  signOutSuccess,
 } from "../app/user/userSlice";
 import { useDispatch } from "react-redux";
 const Profile = () => {
@@ -28,7 +33,7 @@ const Profile = () => {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingError, setShowListingError] = useState(false);
-  const [userListings,setUserListings]=useState([]);
+  const [userListings, setUserListings] = useState([]);
   useEffect(() => {
     if (file) {
       handleUpload(file);
@@ -84,11 +89,11 @@ const Profile = () => {
     }
   };
 
-  const handleDelete=async()=>{
+  const handleDelete = async () => {
     try {
       dispatch(deleteUserStart());
-      const res=await fetch(`/api/user/delete/${currentUser._id}`,{
-        method: 'DELETE',
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
       });
       const data = await res.json();
       if (data.success === false) {
@@ -99,13 +104,13 @@ const Profile = () => {
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
     }
-  }
-  const handleSignOut=async()=>{
+  };
+  const handleSignOut = async () => {
     try {
       dispatch(signOutStart());
-      const res=await fetch('/api/auth/signout');
-      const data=await res.json();
-      if(data.success===false){
+      const res = await fetch("/api/auth/signout");
+      const data = await res.json();
+      if (data.success === false) {
         dispatch(signOutFailure(data.message));
         return;
       }
@@ -113,14 +118,14 @@ const Profile = () => {
     } catch (error) {
       dispatch(signOutFailure(error.message));
     }
-  }
+  };
 
-  const handleListings=async()=>{
+  const handleListings = async () => {
     try {
       setShowListingError(false);
-      const res=await fetch(`/api/user/listings/${currentUser._id}`);
-      const data=await res.json();
-      if(data.success===false){
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
         setShowListingError(true);
         return;
       }
@@ -128,7 +133,23 @@ const Profile = () => {
     } catch (error) {
       setShowListingError(true);
     }
-  }
+  };
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        return;
+      }
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id != listingId)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-2">Profile</h1>
@@ -188,15 +209,24 @@ const Profile = () => {
         >
           {loading ? "Loading..." : "UPDATE"}
         </button>
-        <Link className="bg-green-700 p-2 text-center text-white rounded-lg uppercase hover:opacity-95" to={"/create-listing"}>
-        CREATE LISTING
+        <Link
+          className="bg-green-700 p-2 text-center text-white rounded-lg uppercase hover:opacity-95"
+          to={"/create-listing"}
+        >
+          CREATE LISTING
         </Link>
       </form>
       <div className="flex justify-between mt-5">
-        <span onClick={handleDelete} className="text-red-600 cursor-pointer font-semibold">
+        <span
+          onClick={handleDelete}
+          className="text-red-600 cursor-pointer font-semibold"
+        >
           Delete Account
         </span>
-        <span onClick={handleSignOut} className="text-red-600 cursor-pointer font-semibold">
+        <span
+          onClick={handleSignOut}
+          className="text-red-600 cursor-pointer font-semibold"
+        >
           Sign Out
         </span>
       </div>
@@ -204,26 +234,53 @@ const Profile = () => {
       <p className="text-green-700 mt-5">
         {updateSuccess ? "User updated successfully" : ""}
       </p>
-      <button onClick={handleListings} className="text-green-600 w-full">Show Listings</button>
-      <p className="text-red-700 mt-5">{showListingError ? "Error Showing listings" : ""}</p>
+      <button onClick={handleListings} className="text-green-600 w-full">
+        Show Listings
+      </button>
+      <p className="text-red-700 mt-5">
+        {showListingError ? "Error Showing listings" : ""}
+      </p>
       <div className="flex flex-col gap-4">
-      <h1 className="text-center text-2xl mt-7 font-semibold">Your Listings</h1>
-      {userListings&&userListings.length>0&&
-      userListings.map((listing)=>(
-        <div key={listing._id} className="border rounded-lg p-3 flex justify-between items-center gap-4">
-        <Link to={`/listing/${listing._id}`}>
-        <img src={listing.imageUrls[0]} alt="listing-cover" className="h-16 w-16 object-contain" />
-
-        </Link>
-        <Link className="text-slate-700 font-semibold  hover:underline truncate" to={`/listing/${listing._id}`}>
-        <p >{listing.name}</p>
-        </Link>
-        <div className="flex flex-col items-center">
-          <button className="text-red-600 uppercase">Delete</button>
-          <button className="text-green-600 uppercase">Edit</button>
-        </div>
-        </div>
-      ))}
+        {userListings && userListings.length > 0 && (
+          <h1 className="text-center text-2xl mt-7 font-semibold">
+            Your Listings
+          </h1>
+        )}
+        {userListings &&
+          userListings.length > 0 &&
+          userListings.map((listing) => (
+            <div
+              key={listing._id}
+              className="border rounded-lg p-3 flex justify-between items-center gap-4"
+            >
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt="listing-cover"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link
+                className="text-slate-700 font-semibold  hover:underline truncate"
+                to={`/listing/${listing._id}`}
+              >
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={() => handleListingDelete(listing._id)}
+                  className="text-red-600 text-2xl uppercase"
+                >
+                  <MdDeleteOutline />
+                </button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className="text-green-600 text-2xl uppercase">
+                    <CiEdit />
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   );

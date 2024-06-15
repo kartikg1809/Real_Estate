@@ -139,6 +139,7 @@ import {
           setError(data.message);
         }
         setUpdated(true);
+        navigate(`/listing/${data._id}`);
       } catch (error) {
         setError(error.message);
         setLoading(false);

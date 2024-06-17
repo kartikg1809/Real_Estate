@@ -69,7 +69,7 @@ const Home = () => {
               <h2 className='text-2xl font-semibold text-slate-600'>Recent Offers</h2>
               <Link className='text-sm text-blue-800 hover:underline' to={'/search?offer=true'}>Show more offer</Link>
             </div>
-            <div className='flex flex-wrap gap-4'>
+            <div className='flex flex-nowrap gap-4'>
               {offerListings.map((listing)=>(
                 <ListingItem key={listing._id} listing={listing} />
               ))}
@@ -84,7 +84,7 @@ const Home = () => {
               <h2 className='text-2xl font-semibold text-slate-600'>Recent places for rent</h2>
               <Link className='text-sm text-blue-800 hover:underline' to={'/search?type=rent'}>Show more places for rent</Link>
             </div>
-            <div className='flex flex-wrap gap-4'>
+            <div className='flex flex-nowrap gap-4'>
               {rentListings.map((listing)=>(
                 <ListingItem key={listing._id} listing={listing} />
               ))}
@@ -99,7 +99,7 @@ const Home = () => {
               <h2 className='text-2xl font-semibold text-slate-600'>Recent places for sale</h2>
               <Link className='text-sm text-blue-800 hover:underline' to={'/search?type=sale'}>Show more places for sale</Link>
             </div>
-            <div className='flex flex-wrap gap-4'>
+            <div className='flex flex-nowrap gap-4'>
               {saleListings.map((listing)=>(
                 <ListingItem key={listing._id} listing={listing} />
               ))}

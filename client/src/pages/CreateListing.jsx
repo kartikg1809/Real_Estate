@@ -137,8 +137,8 @@ const CreateListing = () => {
       if (data.success === false) {
         setError(data.message);
       }
+      navigate(`/listing/${data._id}`)
       setCreate(true);
-      navigate(`listing/${data._id}`)
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -273,7 +273,7 @@ const CreateListing = () => {
               />
               <div className="flex flex-col item-center">
                 <p>Regular Price</p>
-                <span className="text-small">(₹/month)</span>
+                {formData.type==='rent'&&<span className="text-small">(₹/month)</span>}
               </div>
             </div>
             {formData.offer&&(
@@ -288,7 +288,7 @@ const CreateListing = () => {
               />
               <div className="flex flex-col item-center">
                 <p>Discounted Price</p>
-                <span className="text-small">(₹/month)</span>
+                {formData.type==='rent'&&<span className="text-small">(₹/month)</span>}
               </div>
             </div>)}
           </div>

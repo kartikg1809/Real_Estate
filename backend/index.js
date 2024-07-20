@@ -5,13 +5,13 @@ import authRouter from './routes/authRoutes.js';
 import userRouter from './routes/userRoute.js';
 import cookieParser from 'cookie-parser';
 import listingRouter from './routes/listingRoutes.js';
-import path from 'path';
 dotenv.config();
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
 app.use(express.json());    //to allow json to the server
-
+app.use(cors());
 app.use(cookieParser());
 
 app.listen(3000,()=>{
@@ -28,13 +28,9 @@ app.use('/api/auth',authRouter);
 app.use('/api/user',userRouter);
 app.use('/api/listing',listingRouter);
 
-const __dirname=path.resolve();
-
-app.use(express.static(path.join(__dirname,'/client/dist')));
-
-app.get('*',(req,res)=>{
-  res.sendFile(path.join(__dirname,'client','dist','index.html'));  
-})
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'Server is running' });
+  });
 
 app.use((err,req,res,next)=>{
     const statuscode=err.statusCode||500;
@@ -45,3 +41,5 @@ app.use((err,req,res,next)=>{
         message, 
     })
 })
+
+export default app;

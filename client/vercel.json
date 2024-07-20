@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "https://real-estate-afmprbtxe-kartiks-projects-afb6be03.vercel.app/api/$1"
+            "destination": "https://real-estate-j6g89mlqa-kartiks-projects-afb6be03.vercel.app/api/$1"
         },
         {
             "source": "/(.*)",
